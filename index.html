@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Inizia il Tuo Viaggio</title>
+    <link rel="icon" href="images/pianeta.png" type="image/jpeg" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #fff;
+            overflow-x: hidden;
+        }
+
+        .hero-section {
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .hero-section video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1; /* Manda il video sotto al testo */
+        }
+
+        .hero-text {
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translate(-50%, -10%);
+            text-align: center;
+            color: white;
+            width: 100%;
+            animation: slideIn 2s ease-out; /* Animazione per il testo */
+            padding: 0 20px; /* Padding per non toccare i bordi su mobile */
+        }
+
+        .hero-text h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: fadeInText 1.5s forwards 1s; /* Animazione per il titolo */
+        }
+
+        .hero-text p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0;
+            animation: fadeInText 1.5s forwards 1.5s; /* Animazione per il paragrafo */
+        }
+
+        .cta-button {
+            padding: 15px 30px;
+            background-color: #2D9CDB;
+            color: white;
+            font-size: 1rem;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            background-color: #1A74B9;
+            transform: scale(1.1); /* Animazione di ingrandimento al passaggio del mouse */
+        }
+
+        footer {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.7rem;
+            color: white;
+            text-align: center;
+            opacity: 0;
+            animation: fadeInFooter 2s forwards 2.5s;
+            padding: 0 10px;
+            max-width: 90vw;
+
+            /* Stili base footer per schermi grandi */
+            overflow: visible;
+            white-space: normal;
+        }
+
+        footer p {
+            margin: 0;
+            display: block;
+            padding-left: 0;
+            animation: none;
+            white-space: normal;
+        }
+
+        /* Animazioni */
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            0% {
+                transform: translate(-50%, -10%) translateY(50px);
+            }
+            100% {
+                transform: translate(-50%, -10%) translateY(0);
+            }
+        }
+
+        @keyframes fadeInText {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes bounce {
+            0% {
+                transform: translateY(0);
+            }
+            25% {
+                transform: translateY(-10px);
+            }
+            50% {
+                transform: translateY(0);
+            }
+            75% {
+                transform: translateY(-5px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInFooter {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @keyframes scroll-left {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        /* Animazione footer scroll su schermi piccoli */
+        @media (max-width: 768px) {
+            footer {
+                overflow: hidden;
+                white-space: nowrap;
+            }
+            footer p {
+                display: inline-block;
+                padding-left: 100%;
+                animation: scroll-left 15s linear infinite;
+                white-space: nowrap;
+            }
+        }
+
+        /* Responsive per dispositivi più piccoli */
+        @media (max-width: 480px) {
+            .hero-text h1 {
+                font-size: 1.5rem; /* Titolo ancora più piccolo */
+            }
+
+            .hero-text p {
+                font-size: 0.9rem; /* Paragrafo più piccolo */
+            }
+
+            .cta-button {
+                padding: 10px 20px;
+                font-size: 0.85rem;
+            }
+
+            footer p {
+                font-size: 0.65rem;
+                animation-duration: 20s;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero-section">
+        <!-- Video di sfondo -->
+        <video autoplay loop muted playsinline>
+            <source src="images/terra_video.mp4" type="video/mp4" />
+            Il tuo browser non supporta il video di sfondo.
+        </video>
+
+        <div class="hero-text">
+            <h1>Rispetto Ecologico</h1>
+            <p>
+                Esplora attraverso questa mostra virtuale <br>
+                il concetto di "Rispetto Ecologico" grazie ad opere di artisti contemporanei <br>
+                che hanno scelto come forma d'arte la Land Art
+                <br> e accompagnate da citazioni dei filosofi Aldo Leopold e Emanuele Coccia.
+            </p>
+            <a href="planisfero.html" class="cta-button">Inizia il Tuo Viaggio</a>
+        </div>
+    </section>
+
+    <footer>
+        <p>
+            Tessa Bosio, Accademia di Belle Arti di Urbino, Scuola di Nuove Tecnologie
+            dell’Arte, Fenomenologia dell'Arte Contemporanea, A.A. 25-26
+        </p>
+    </footer>
+</body>
+</html>
