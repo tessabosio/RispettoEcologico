@@ -8,7 +8,6 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 
 // Dati migliorati per i progetti di artivismo
-const IMAGE_BASE_PATH = 'images/';
 const artivismData = [
 {
         location: [39.3210, -111.0937],
@@ -283,7 +282,7 @@ artivismData.forEach((project) => {
     const marker = L.marker(project.location).addTo(map);
 
     marker.on('click', () => {
-        document.getElementById('overlay-image').src = IMAGE_BASE_PATH + project.image;
+        document.getElementById('overlay-image').src = project.image;
         document.getElementById('overlay-artist').innerHTML = `${project.title}<br><i>${project.artist}</i>`;
         
         // Separa la citazione dall'autore
