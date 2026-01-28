@@ -288,17 +288,6 @@ overlay.innerHTML = `
         max-width: 90%;
         line-height: 1.6;
     "></div>
-    
-    <!-- Indicatore per swipe (solo mobile) -->
-    <div id="swipe-indicator" style="
-        display: none;
-        color: rgba(255,255,255,0.6);
-        font-size: 12px;
-        margin-top: 15px;
-        text-align: center;
-    ">
-        ↑ Scorri verso l'alto per chiudere
-    </div>
 `;
 
 document.body.appendChild(overlay);
@@ -308,16 +297,6 @@ document.body.appendChild(overlay);
 // ============================================
 let touchStartY = 0;
 let touchEndY = 0;
-
-// Mostra/nascondi indicatore swipe su mobile
-function updateSwipeIndicator() {
-    const indicator = document.getElementById('swipe-indicator');
-    if (isMobile() && overlay.style.display === 'flex') {
-        indicator.style.display = 'block';
-    } else {
-        indicator.style.display = 'none';
-    }
-}
 
 // Gestione touch per swipe
 overlay.addEventListener('touchstart', (e) => {
@@ -384,7 +363,6 @@ artivismData.forEach((project) => {
         }
         document.getElementById('overlay-info').innerHTML = descHTML;
         overlay.style.display = 'flex';
-        updateSwipeIndicator();
         
         // Nascondi i bottoni
         const homeButton = document.querySelector('.home-button');
@@ -393,9 +371,6 @@ artivismData.forEach((project) => {
         if (ecologyButton) ecologyButton.style.display = 'none';
     });
 });
-
-// Aggiorna l'indicatore di swipe al resize
-window.addEventListener('resize', updateSwipeIndicator);
 
 // Debug: conferma il caricamento della mappa
 console.log("Mappa inizializzata con successo.");
