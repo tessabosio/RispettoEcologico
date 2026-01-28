@@ -293,27 +293,8 @@ overlay.innerHTML = `
 document.body.appendChild(overlay);
 
 // ============================================
-// GESTURE HANDLING E INTERAZIONI
+// INTERAZIONI
 // ============================================
-let touchStartY = 0;
-let touchEndY = 0;
-
-// Gestione touch per swipe
-overlay.addEventListener('touchstart', (e) => {
-    touchStartY = e.changedTouches[0].screenY;
-}, false);
-
-overlay.addEventListener('touchend', (e) => {
-    touchEndY = e.changedTouches[0].screenY;
-    handleSwipe();
-}, false);
-
-function handleSwipe() {
-    const swipeDistance = touchStartY - touchEndY;
-    if (swipeDistance > 100) { // Swipe verso l'alto di almeno 100px
-        closeOverlay();
-    }
-}
 
 // Funzione per chiudere l'overlay
 function closeOverlay() {
