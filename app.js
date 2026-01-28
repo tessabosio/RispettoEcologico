@@ -193,9 +193,12 @@ const artivismData = [
 }                                                 
     ];
 
-// ----------------------------------------------------
+// Rileva se è un dispositivo mobile
+const isMobile = () => window.innerWidth <= 768;
+
+// ============================================
 // CREA OVERLAY DINAMICO PER LE IMMAGINI
-// ----------------------------------------------------
+// ============================================
 const overlay = document.createElement('div');
 overlay.id = 'image-overlay';
 overlay.style = `
@@ -209,49 +212,129 @@ overlay.style = `
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    flex-direction: column;
+    padding: 20px;
+    box-sizing: border-box;
 `;
 
-// HTML interno overlay
+// HTML interno overlay con pulsante chiudi migliorato
 overlay.innerHTML = `
-    <div id="overlay-content" 
-         style="display: flex; flex-direction: column; justify-content: center; align-items: center; max-width: 90%; max-height: 90%; position: relative;">
+    <div id="overlay-header" style="
+        width: 100%;
+        max-width: 600px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+        position: relative;
+    ">
+        <div id="overlay-artist" style="
+            color: white; 
+            text-align: left; 
+            flex: 1;
+            font-size: clamp(16px, 5vw, 20px);
+            font-weight: 500;
+        "></div>
         <button id="close-overlay" style="
-            position: absolute;
-            top: -40px;
-            right: -40px;
             background: #2D9CDB;
             color: white;
             border: none;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            font-size: 24px;
+            width: 50px;
+            height: 50px;
+            min-width: 50px;
+            font-size: 28px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             box-shadow: 0 4px 10px rgba(45, 156, 219, 0.4);
             transition: background-color 0.3s ease, transform 0.3s ease;
+            flex-shrink: 0;
+            margin-left: 15px;
         " onmouseover="this.style.backgroundColor='#1A74B9'; this.style.transform='scale(1.1)';" 
            onmouseout="this.style.backgroundColor='#2D9CDB'; this.style.transform='scale(1)';">×</button>
-        <div id="overlay-artist" style="color:white; text-align:center; margin-bottom:15px; font-size:18px;"></div>
+    </div>
+    
+    <div id="overlay-content" style="
+        display: flex; 
+        flex-direction: column; 
+        justify-content: center; 
+        align-items: center; 
+        width: 100%;
+        max-width: 90vw;
+        max-height: 70vh;
+        position: relative;
+    ">
         <img
             id="overlay-image"
             src=""
             style="
-                max-width: 90%;
-                max-height: 60vh;
+                max-width: 100%;
+                max-height: 100%;
                 object-fit: contain;
                 background: black;
                 display: block;
                 border-radius: 10px;
             "
         >
-        <div id="overlay-info" style="color:white; text-align:center; margin-top:15px; font-size:16px; max-width: 80%; line-height: 1.6;"></div>
+    </div>
+    
+    <div id="overlay-info" style="
+        color: white; 
+        text-align: center; 
+        margin-top: 20px; 
+        font-size: clamp(14px, 4vw, 16px);
+        max-width: 90%;
+        line-height: 1.6;
+    "></div>
+    
+    <!-- Indicatore per swipe (solo mobile) -->
+    <div id="swipe-indicator" style="
+        display: none;
+        color: rgba(255,255,255,0.6);
+        font-size: 12px;
+        margin-top: 15px;
+        text-align: center;
+    ">
+        ↑ Scorri verso l'alto per chiudere
     </div>
 `;
 
 document.body.appendChild(overlay);
+
+// ============================================
+// GESTURE HANDLING E INTERAZIONI
+// ============================================
+let touchStartY = 0;
+let touchEndY = 0;
+
+// Mostra/nascondi indicatore swipe su mobile
+function updateSwipeIndicator() {
+    const indicator = document.getElementById('swipe-indicator');
+    if (isMobile() && overlay.style.display === 'flex') {
+        indicator.style.display = 'block';
+    } else {
+        indicator.style.display = 'none';
+    }
+}
+
+// Gestione touch per swipe
+overlay.addEventListener('touchstart', (e) => {
+    touchStartY = e.changedTouches[0].screenY;
+}, false);
+
+overlay.addEventListener('touchend', (e) => {
+    touchEndY = e.changedTouches[0].screenY;
+    handleSwipe();
+}, false);
+
+function handleSwipe() {
+    const swipeDistance = touchStartY - touchEndY;
+    if (swipeDistance > 100) { // Swipe verso l'alto di almeno 100px
+        closeOverlay();
+    }
+}
 
 // Funzione per chiudere l'overlay
 function closeOverlay() {
@@ -267,34 +350,41 @@ function closeOverlay() {
 // Chiudi overlay con il bottone X
 document.getElementById('close-overlay').addEventListener('click', closeOverlay);
 
-// Chiudi overlay cliccando fuori dall'immagine
+// Chiudi overlay cliccando fuori dal contenuto (solo desktop)
 overlay.addEventListener('click', (e) => {
-    if (e.target.id === 'image-overlay') {
+    if (e.target.id === 'image-overlay' && !isMobile()) {
         closeOverlay();
     }
 });
 
+// Chiudi con ESC
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && overlay.style.display === 'flex') {
+        closeOverlay();
+    }
+});
 
-// ----------------------------------------------------
+// ============================================
 // CREA I MARKER E COLLEGA L'OVERLAY
-// ----------------------------------------------------
+// ============================================
 artivismData.forEach((project) => {
     const marker = L.marker(project.location).addTo(map);
 
     marker.on('click', () => {
         document.getElementById('overlay-image').src = project.image;
-        document.getElementById('overlay-artist').innerHTML = `${project.title}<br><i>${project.artist}</i>`;
+        document.getElementById('overlay-artist').innerHTML = `<strong>${project.title}</strong><br><i>${project.artist}</i>`;
         
         // Separa la citazione dall'autore
         const descParts = project.description.match(/^(.*?)\s*\(([^)]+)\)$/);
         let descHTML;
         if (descParts) {
-            descHTML = `${descParts[1]}<br><i>${descParts[2]}</i>`;
+            descHTML = `"${descParts[1]}"<br><i>– ${descParts[2]}</i>`;
         } else {
             descHTML = project.description;
         }
         document.getElementById('overlay-info').innerHTML = descHTML;
         overlay.style.display = 'flex';
+        updateSwipeIndicator();
         
         // Nascondi i bottoni
         const homeButton = document.querySelector('.home-button');
@@ -304,17 +394,8 @@ artivismData.forEach((project) => {
     });
 });
 
-// Funzione per chiudere l'overlay
-function closeOverlay() {
-    overlay.style.display = 'none';
-    
-    // Ripristina i bottoni
-    const homeButton = document.querySelector('.home-button');
-    const ecologyButton = document.querySelector('.ecology-button');
-    if (homeButton) homeButton.style.display = '';
-    if (ecologyButton) ecologyButton.style.display = '';
-}
-
+// Aggiorna l'indicatore di swipe al resize
+window.addEventListener('resize', updateSwipeIndicator);
 
 // Debug: conferma il caricamento della mappa
 console.log("Mappa inizializzata con successo.");
